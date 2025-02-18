@@ -1,42 +1,66 @@
-#root {
-  max-width: 1280px;
+/* Container principal */
+.container {
+  position: relative;
+  left: 100%;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Barra de pesquisa */
+.search-bar {
+  position: relative;
+  width: 60%;
+  max-width: 500px;
+  padding: 12px;
+  margin: 20px 0;
+  border: 2px solid #f86465;
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: left;
+  outline: none;
+  transition: all 0.3s;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Efeito ao focar na barra */
+.search-bar:focus {
+  border-color: #d43c3c;
+  box-shadow: 0px 0px 8px rgba(248, 100, 101, 0.6);
 }
 
-.card {
-  padding: 2em;
+/* Lista de vagas */
+.vagas-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  align-items: center;
 }
 
-.read-the-docs {
-  color: #888;
+/* Cartão de cada vaga */
+.vaga-card {
+  width: 90%;
+  max-width: 600px;
+  text-decoration: none;
+  padding: 15px;
+  background: #f86465;
+  color: white;
+  border-radius: 8px;
+  transition: 0.3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.vaga-card:hover {
+  background: black; /* Fica preto no hover */
+  color: white;
+}
+
+.vaga-card h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
 }
