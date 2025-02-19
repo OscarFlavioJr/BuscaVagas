@@ -122,15 +122,15 @@ def carregar_vagas_raizen():
     global total_vagas_encontradas
     url = "https://genteraizen.gupy.io/"
     driver.get(url)
-    driver.implicitly_wait(5)
+    driver.implicitly_wait(15)
 
     total_vagas = 0
 
     while True:
-        print("[+] Coletando vagas da página atual...")
+        print("Acessando Raízen na Gupy")
 
         # Captura os títulos das vagas
-        vagas_raizen = driver.find_elements(By.XPATH, "//div[contains(@class, 'sc-gdyeKB hhuvfr-2')]")
+        vagas_raizen = driver.find_elements(By.XPATH, "//div[contains(@class, 'sc-d1f2599d-2 kTVnRf')]")
 
         for vaga in vagas_raizen:
             titulo = vaga.text.strip()
@@ -140,7 +140,7 @@ def carregar_vagas_raizen():
         # Tenta encontrar o botão da próxima página (numerado)
         try:
             # Encontra todos os botões de página numerados
-            botoes_pagina = driver.find_elements(By.XPATH, "//button[contains(@class, 'pagination-page-button')]")
+            botoes_pagina = driver.find_elements(By.XPATH, "//button[contains(@class, 'sc-kzqdkY fcBsy')]")
 
             # Verifica se o último botão não é o maior número
             if not botoes_pagina:
@@ -148,7 +148,7 @@ def carregar_vagas_raizen():
                 break
 
             # Verifica o número da página atual e do próximo botão
-            ultima_pagina = botoes_pagina[-1].text  # Último botão, que deve ser o maior número
+            ultima_pagina = botoes_pagina[0].text  # Último botão, que deve ser o maior número
             pagina_atual = botoes_pagina[-2].text  # Penúltimo botão, deve ser o número anterior
 
             # Se o número da página atual for igual ao número da última página, então não há mais páginas
@@ -168,48 +168,6 @@ def carregar_vagas_raizen():
     total_vagas_encontradas += total_vagas
     print(f"[+] Total de vagas coletadas da Raízen: {total_vagas}")
 
-
-
-def carregar_vagas_cosan():
-    global total_vagas_encontradas
-    url = "https://cosan.gupy.io/"
-    driver.get(url)
-    driver.implicitly_wait(5)
-
-    total_vagas = 0
-
-    while True:
-        print("[+] Coletando vagas da página atual...")
-
-        # Captura os títulos das vagas
-        vagas_cosan = driver.find_elements(By.XPATH, "//div[contains(@class, 'sc-d1f2599d-2')]")
-
-        for vaga in vagas_cosan:
-            titulo = vaga.text.strip()
-            print(f"[+] {titulo}")
-            total_vagas += 1
-
-        # Tenta encontrar o botão da próxima página
-        try:
-            # Tenta capturar o botão da próxima página
-            botao_proxima = driver.find_element(By.XPATH, "//button[@data-testid='pagination-page-button']")
-
-            # Verifica se o botão está visível e ativo
-            if "disabled" in botao_proxima.get_attribute("class") or not botao_proxima.is_enabled():
-                print("[+] Última página alcançada. Encerrando...")
-                break  # Interrompe o loop se o botão estiver desabilitado ou invisível
-
-            # Usa JavaScript para clicar no botão
-            driver.execute_script("arguments[0].click();", botao_proxima)
-            print("[+] Avançando para a próxima página...")
-            time.sleep(5)  # Aguarda carregamento
-
-        except NoSuchElementException:
-            print("[+] Não há mais páginas disponíveis.")
-            break  # Sai do loop quando o botão não for encontrado
-
-    total_vagas_encontradas += total_vagas
-    print(f"[+] Total de vagas coletadas da Cosan: {total_vagas}")
 
 
 def carregar_vagas_cosan():
