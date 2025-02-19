@@ -45,10 +45,12 @@ carregar_todas_as_vagas()
 base_url = "https://www.vagas.com.br"
 vagas = driver.find_elements(By.CSS_SELECTOR, "h2.cargo a")
 
+totalVagas = 0
+
 for vaga in vagas:
     titulo = vaga.text.strip()
     link = vaga.get_attribute("href")
-
+    totalVagas +=1
     if link.startswith("/"):
         link = base_url + link
 
@@ -61,4 +63,4 @@ conn.commit()
 conn.close()
 driver.quit()
 
-print("[+] Scraping finalizado e dados salvos no banco!")
+print("[+] Scraping finalizado e dados salvos no banco! total de vags encontradas" , totalVagas)
