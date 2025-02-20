@@ -72,28 +72,28 @@ def carregar_vagas_vagas():
     print(f"[+] Total de vagas coletadas do Grupo Fleury: {total_vagas}")
 
 # Função para coletar vagas do NaturaCarreiras
-def carregar_vagas_natura():
-    global total_vagas_encontradas
-    print("[+] Acessando NaturaCarreiras...")
-    url_natura = "https://avon.wd5.myworkdayjobs.com/pt-BR/NaturaCarreiras"
-    driver.get(url_natura)
-    driver.implicitly_wait(5)
+def carregar_vagas_natura(): 
+    global total_vagas_encontradas #controle do numero total de vagas encontradas!
+    print("[+] Acessando NaturaCarreiras...") #Avisar que está dando certo!
+    url_natura = "https://avon.wd5.myworkdayjobs.com/pt-BR/NaturaCarreiras" #link do site
+    driver.get(url_natura) #Faz o Selenium acessar o site
+    driver.implicitly_wait(5) #Gera um tempo de espera de 5 segundos para que o site carregue por completo
 
-    total_vagas = 0
+    total_vagas = 0 #0 vagas encontradas na Natura até este estágio
     pagina_atual = 1  # Controla a página atual
 
     while True:
-        print(f"[+] Coletando vagas da página {pagina_atual}...")
+        print(f"[+] Coletando vagas da página {pagina_atual}...") #enquanto houver página, ele está imprimindo "Coletando"
 
         # Coletar as vagas da página atual
-        vagas_natura = driver.find_elements(By.CSS_SELECTOR, "a.css-19uc56f")
+        vagas_natura = driver.find_elements(By.CSS_SELECTOR, "a.css-19uc56f") #Selenium busca por estas DIVS para fazer o scrap
 
-        for vaga in vagas_natura:
-            titulo = vaga.text.strip()
+        for vaga in vagas_natura:  #tira da variável vaga e atribui à função
+            titulo = vaga.text.strip() #Pega os caracteres
             link = vaga.get_attribute("href")
 
             # Inserir no banco, evitando duplicatas
-            cursor.execute("INSERT OR IGNORE INTO vagas (titulo, link) VALUES (?, ?)", (titulo, link))
+            cursor.execute("INSERT OR IGNORE INTO vagas (titulo, link) VALUES (?, ?)", (titulo, link)) 
             print(f"[+] {titulo} - {link}")
             total_vagas += 1
 
@@ -122,21 +122,26 @@ def carregar_vagas_raizen():
     global total_vagas_encontradas
     url = "https://genteraizen.gupy.io/"
     driver.get(url)
-    driver.implicitly_wait(15)
 
     total_vagas = 0
 
     while True:
         print("Acessando Raízen na Gupy")
 
-        # Captura os títulos das vagas
-        vagas_raizen = driver.find_elements(By.XPATH, "//div[contains(@class, 'sc-d1f2599d-2 kTVnRf')]")
-
+        # Captura os elementos <a> que contêm os links das vagas
+        vagas_raizen = driver.find_elements(By.XPATH, "//a[@data-testid='job-list__listitem-href']")
+        
         for vaga in vagas_raizen:
-            titulo = vaga.text.strip()
-            print(f"[+] {titulo}")
+            titulo = vaga.get_attribute("aria-label").strip()  # Obtém o nome da vaga
+            link = vaga.get_attribute("href")  # Obtém o link
+            
+            # Inserir no banco, evitando duplicatas
+            cursor.execute("INSERT OR IGNORE INTO vagas (titulo, link) VALUES (?, ?)", (titulo, link))
+            print(f"[+] {titulo} - {link}")
             total_vagas += 1
 
+        conn.commit()
+        
         # Tenta encontrar o botão "Próxima Página"
         try:
             botao_proximo = driver.find_element(By.XPATH, "//button[@data-testid='pagination-next-button']")
@@ -154,7 +159,6 @@ def carregar_vagas_raizen():
         except NoSuchElementException:
             print("[+] Botão de próxima página não encontrado. Encerrando...")
             break
-
     total_vagas_encontradas += total_vagas
     print(f"[+] Total de vagas coletadas da Raízen: {total_vagas}")
 

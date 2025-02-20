@@ -1,5 +1,5 @@
 import React from "react";
-import Vagas from "./Vagas";
+import Vaga from "./vaga";
 
 const App: React.FC = () => {
   return (
@@ -13,7 +13,7 @@ const App: React.FC = () => {
         backgroundColor: "#f5f5f5",
       }}
     >
-      <Vagas />
+      <Vaga />
     </div>
   );
 };

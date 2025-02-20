@@ -1,0 +1,50 @@
+/* vaga.css */
+.container {
+  text-align: center;
+  padding: 20px;
+}
+
+.input-busca {
+  padding: 12px;
+  width: 300px;
+  border: 2px solid #f86465;
+  border-radius: 8px;
+  outline: none;
+  font-size: 16px;
+  text-align: center;
+  transition: 0.3s ease-in-out;
+}
+
+.input-busca:focus {
+  border-color: black;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.vagas-container {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.vaga {
+  background-color: #f86465;
+  padding: 15px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  width: 250px;
+  text-align: center;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vaga:hover {
+  background-color: black;
+  transform: scale(1.05);
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+}
