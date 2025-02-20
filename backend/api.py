@@ -20,8 +20,8 @@ def get_vagas():
     conn = sqlite3.connect("vagas.db")
     cursor = conn.cursor()
 
-    cursor.execute("SELECT titulo, link FROM vagas")
-    vagas = [{"titulo": row[0], "link": row[1]} for row in cursor.fetchall()]
+    cursor.execute("SELECT titulo, link, empresa FROM vagas")  # Pegando a empresa também
+    vagas = [{"titulo": row[0], "link": row[1], "empresa": row[2]} for row in cursor.fetchall()]
 
     conn.close()
     return vagas
