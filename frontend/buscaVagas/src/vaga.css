@@ -1,50 +1,122 @@
-/* vaga.css */
+/* Garante que a página ocupe toda a tela, mas permite rolagem se necessário */
 .container {
-  text-align: center;
-  padding: 20px;
-}
-
-.input-busca {
-  padding: 12px;
-  width: 300px;
-  border: 2px solid #f86465;
-  border-radius: 8px;
-  outline: none;
-  font-size: 16px;
-  text-align: center;
-  transition: 0.3s ease-in-out;
-}
-
-.input-busca:focus {
-  border-color: black;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
-}
-
-.vagas-container {
-  margin-top: 20px;
+  width: 100%;
+  min-height: 100vh; /* Ajusta a altura para ser no mínimo a altura da tela */
   display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto; /* Permite rolagem quando necessário */
+}
+
+/* Estilização do container de logos */
+.logos-container {
+  display: flex;
+  gap: 30px;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
+  margin-bottom: 20px;
 }
 
-.vaga {
-  background-color: #f86465;
-  padding: 15px;
-  border-radius: 10px;
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
-  width: 250px;
-  text-align: center;
-  transition: 0.3s;
+.logo-wrapper {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  cursor: pointer;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+
+.logo-nome {
+  margin-top: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+}
+
+/* Botão de voltar */
+.voltar {
+  background-color: #fff;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background 0.3s ease;
+}
+
+.voltar:hover {
+  background-color: #ddd;
+}
+
+/* Barra de busca */
+.input-busca {
+  width: 60%;
+  max-width: 400px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Container das vagas */
+.vagas-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 600px;
+  padding-bottom: 20px;
+}
+
+/* Estilização das vagas */
+.vaga {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: transform 0.2s ease;
 }
 
 .vaga:hover {
-  background-color: black;
   transform: scale(1.05);
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilização do conteúdo da vaga */
+.vaga-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.vaga-titulo {
+  font-size: 18px;
+  font-weight: bold;
+  color: #222;
+}
+
+.vaga-empresa {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #555;
 }
