@@ -17,5 +17,5 @@
  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/800px-Python-logo-notext.svg.png" 
      style="width: 80px; position: absolute; left: 50%; transform: translateX(-50%);">
 <img src= "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/640px-React-icon.svg.png"style="width: 80px; position: absolute; left: 50%; transform: translateX(-50%);">
-<img src="https://images.sftcdn.net/images/t_app-icon-m/p/917c77e8-96d1-11e6-8453-00163ed833e7/3780880766/mysql-com-icon.png">
+<img src="https://images.sftcdn.net/images/t_app-icon-m/p/917c77e8-96d1-11e6-8453-00163ed833e7/3780880766/mysql-com-icon.png"  style="width: 80px; position: absolute; left: 50%; transform: translateX(-50%);>
 <p>The project runs 100% on Python as WebScaper and API, graphic interface made with React, using Vite and PWA to enhance UX</p>
