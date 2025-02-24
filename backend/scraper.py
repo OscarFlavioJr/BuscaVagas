@@ -31,7 +31,7 @@ driver = webdriver.Chrome(service=service, options=options)
 
 # Variável para total de vagas encontradas
 total_vagas_encontradas = 0
-INTERVALO_VERIFICACAO = 560
+INTERVALO_VERIFICACAO = 360
 
 def carregar_vagas_vagas():
     global total_vagas_encontradas
@@ -174,6 +174,14 @@ def carregar_vagas_cosan():
     total_vagas_encontradas += total_vagas
     print(f"[+] Total de vagas coletadas da Cosan: {total_vagas}")
 
+def Countdown(t):
+    while t:
+        mins, secs = divmod(t, 60)
+        timer = '{:02d}:{:02d}'.format(mins, secs)
+        print(timer, end='\r')
+        time.sleep(1)
+        t -= 1
+    print("Time's ready")
 
 
 # Executar as funções de scraping
@@ -185,6 +193,8 @@ carregar_vagas_cosan()
 # Exibir o total de vagas encontradas
 print(f"[+] Total de vagas encontradas: {total_vagas_encontradas}")
 
+Countdown(360)
+
 while True:
     print("\n[+] Iniciando nova verificação...")
     
@@ -194,7 +204,7 @@ while True:
     carregar_vagas_cosan()
 
     print("[+] Verificação concluída. Aguardando próxima execução...\n")
-    
+    Countdown(360)
     time.sleep(INTERVALO_VERIFICACAO)  # Espera X segundos antes de rodar novamente
 
 
