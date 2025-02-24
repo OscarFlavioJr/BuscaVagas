@@ -31,6 +31,7 @@ driver = webdriver.Chrome(service=service, options=options)
 
 # Variável para total de vagas encontradas
 total_vagas_encontradas = 0
+INTERVALO_VERIFICACAO = 560
 
 def carregar_vagas_vagas():
     global total_vagas_encontradas
@@ -183,6 +184,19 @@ carregar_vagas_cosan()
 
 # Exibir o total de vagas encontradas
 print(f"[+] Total de vagas encontradas: {total_vagas_encontradas}")
+
+while True:
+    print("\n[+] Iniciando nova verificação...")
+    
+    carregar_vagas_vagas()
+    carregar_vagas_natura()
+    carregar_vagas_raizen()
+    carregar_vagas_cosan()
+
+    print("[+] Verificação concluída. Aguardando próxima execução...\n")
+    
+    time.sleep(INTERVALO_VERIFICACAO)  # Espera X segundos antes de rodar novamente
+
 
 # Salvar e fechar conexões
 conn.commit()

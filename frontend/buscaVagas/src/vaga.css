@@ -1,20 +1,22 @@
-/* Garante que a página ocupe toda a tela, mas permite rolagem se necessário */
+/* Garante que a página ocupe toda a tela e permita rolagem */
 .container {
-  width: 100%;
-  min-height: 100vh; /* Ajusta a altura para ser no mínimo a altura da tela */
+  min-width: 100%;
+  width: 84.3rem;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   padding: 20px;
   box-sizing: border-box;
-  overflow-y: auto; /* Permite rolagem quando necessário */
+  overflow-y: auto;
+  transition: all 0.5s ease;
 }
 
 /* Estilização do container de logos */
 .logos-container {
   display: flex;
-  gap: 30px;
+  gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
   margin-bottom: 20px;
@@ -25,15 +27,15 @@
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-}
-
-.logo {
-  width: 100px;
-  height: auto;
   transition: transform 0.3s ease;
 }
 
-.logo:hover {
+.logo {
+  width: 80px;
+  height: auto;
+}
+
+.logo-wrapper:hover {
   transform: scale(1.1);
 }
 
@@ -47,8 +49,8 @@
 
 /* Botão de voltar */
 .voltar {
-  background-color: #fff;
-  color: #333;
+  background-color: #f86466;
+  color: #fff;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
@@ -56,23 +58,31 @@
   border-radius: 5px;
   cursor: pointer;
   margin-bottom: 20px;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .voltar:hover {
-  background-color: #ddd;
+  background-color: #d9534f;
+  transform: scale(1.05);
 }
 
 /* Barra de busca */
 .input-busca {
-  width: 60%;
+  min-width: 80%;
   max-width: 400px;
   padding: 10px;
   font-size: 16px;
-  border: none;
+  border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 20px;
   text-align: center;
+  transition: all 0.5s ease;
+}
+
+.input-busca:focus {
+  outline: none;
+  border-color: #f86466;
+  box-shadow: 0 0 5px rgba(248, 100, 102, 0.5);
 }
 
 /* Container das vagas */
@@ -80,8 +90,8 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 100%;
-  max-width: 600px;
+  min-width: 100%;
+  min-width: 370px;
   padding-bottom: 20px;
 }
 
@@ -94,11 +104,12 @@
   padding: 15px;
   border-radius: 8px;
   text-decoration: none;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, background 0.3s ease;
 }
 
 .vaga:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
+  background-color: rgba(255, 255, 255, 1);
 }
 
 /* Estilização do conteúdo da vaga */

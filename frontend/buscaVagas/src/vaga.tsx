@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import "./vaga.css";
 
+function tiraAcento(str: string): string {
+  return str.normalize("NFD").replace(/[̀-ͯ]/g, ""); // Remove acentos
+}
+
 interface Vaga {
   titulo: string;
   link: string;
@@ -17,9 +21,7 @@ const empresas = [
 const Vagas = () => {
   const [vagas, setVagas] = useState<Vaga[]>([]);
   const [filtro, setFiltro] = useState("");
-  const [empresaSelecionada, setEmpresaSelecionada] = useState<string | null>(
-    null
-  );
+  const [empresaSelecionada, setEmpresaSelecionada] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/vagas")
@@ -30,7 +32,7 @@ const Vagas = () => {
 
   const vagasFiltradas = vagas.filter(
     (vaga) =>
-      vaga.titulo.toLowerCase().includes(filtro.toLowerCase()) &&
+      tiraAcento(vaga.titulo.toLowerCase()).includes(tiraAcento(filtro.toLowerCase())) &&
       (!empresaSelecionada || vaga.empresa === empresaSelecionada)
   );
 
@@ -41,11 +43,15 @@ const Vagas = () => {
       className="container"
       style={{
         backgroundColor: empresaAtual?.cor || "#222",
-        height: "100vh",
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
+        padding: "20px",
+        boxSizing: "border-box",
+        overflowY: "auto",
+        transition: "all .5s ease",
       }}
     >
       {!empresaSelecionada ? (
@@ -56,11 +62,7 @@ const Vagas = () => {
               className="logo-wrapper"
               onClick={() => setEmpresaSelecionada(empresa.nome)}
             >
-              <img
-                src={`/logos/${empresa.logo}`}
-                alt={empresa.nome}
-                className="logo"
-              />
+              <img src={empresa.logo} alt={empresa.nome} className="logo" />
               <span className="logo-nome">{empresa.nome}</span>
             </div>
           ))}
@@ -79,24 +81,22 @@ const Vagas = () => {
         onChange={(e) => setFiltro(e.target.value)}
       />
 
-      {filtro && (
-        <div className="vagas-container">
-          {vagasFiltradas.map((vaga, index) => (
-            <a
-              key={index}
-              href={vaga.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="vaga"
-            >
-              <div className="vaga-info">
-                <strong className="vaga-titulo">{vaga.titulo}</strong>
-                <span className="vaga-empresa">{vaga.empresa}</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      )}
+      <div className="vagas-container">
+        {vagasFiltradas.map((vaga) => (
+          <a
+            key={vaga.link}
+            href={vaga.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="vaga"
+          >
+            <div className="vaga-info">
+              <strong className="vaga-titulo">{vaga.titulo}</strong>
+              <span className="vaga-empresa">{vaga.empresa}</span>
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
   );
 };
