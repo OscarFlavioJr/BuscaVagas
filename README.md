@@ -6,6 +6,7 @@
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/800px-Python-logo-notext.svg.png" 
      style="width: 80px; position: absolute; left: 50%; transform: translateX(-50%);">
 <img src= "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/640px-React-icon.svg.png"style="width: 80px; position: absolute; left: 50%; transform: translateX(-50%);">
+<img src="https://e7.pngegg.com/pngimages/747/798/png-clipart-mysql-mysql-thumbnail.png" style="width: 80px; position: absolute; left: 50%; transform: translateX(-50%);">
 <p>O projeto roda 100% em python, com o webscrapper e API. A parte gráfica é em REACT, utilizando VITE e PWA, para escalabilizar a experiência do usuário</p>
 
 <h1>Vacancy Browser</h1>
@@ -16,4 +17,5 @@
  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/800px-Python-logo-notext.svg.png" 
      style="width: 80px; position: absolute; left: 50%; transform: translateX(-50%);">
 <img src= "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/640px-React-icon.svg.png"style="width: 80px; position: absolute; left: 50%; transform: translateX(-50%);">
+<img src="https://e7.pngegg.com/pngimages/747/798/png-clipart-mysql-mysql-thumbnail.png" style="width: 80px; position: absolute; left: 50%; transform: translateX(-50%);">
 <p>The project runs 100% on Python as WebScaper and API, graphic interface made with React, using Vite and PWA to enhance UX</p>
