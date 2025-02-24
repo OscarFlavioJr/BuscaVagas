@@ -204,7 +204,6 @@ while True:
     carregar_vagas_cosan()
 
     print("[+] Verificação concluída. Aguardando próxima execução...\n")
-    Countdown(360)
     time.sleep(INTERVALO_VERIFICACAO)  # Espera X segundos antes de rodar novamente
 
 
