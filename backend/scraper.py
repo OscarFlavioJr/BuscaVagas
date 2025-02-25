@@ -4,8 +4,14 @@ import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException, TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 
 # Configuração do banco de dados SQLite
 db_path = os.path.abspath("vagas.db")
@@ -26,12 +32,21 @@ conn.commit()
 # Configurar o navegador Selenium
 options = webdriver.ChromeOptions()
 options.add_argument("--headless")  # Rodar em modo headless (sem abrir o navegador)
+options.add_argument("user-agent=Mozilla/5.0")  # Definir User-Agent
+options.add_argument("--start-maximized")  # Maximizar janela
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
 
-# Variável para total de vagas encontradas
+def remover_iframes():
+    driver.execute_script("""
+        var iframes = document.getElementsByTagName('iframe');
+        for (var i = 0; i < iframes.length; i++) {
+            iframes[i].parentNode.removeChild(iframes[i]);
+        }
+    """)
+
 total_vagas_encontradas = 0
-INTERVALO_VERIFICACAO = 360
+INTERVALO_VERIFICACAO = 600
 
 def carregar_vagas_vagas():
     global total_vagas_encontradas
@@ -43,12 +58,15 @@ def carregar_vagas_vagas():
 
     while True:
         try:
-            botao = driver.find_element(By.ID, "maisVagas")
-            botao.click()
+            remover_iframes()  # Remove iframes antes de clicar
+            botao = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "maisVagas")))
+            driver.execute_script("arguments[0].scrollIntoView();", botao)
+            time.sleep(1)  # Pequeno delay para evitar erro
+            driver.execute_script("arguments[0].click();", botao)
             print("[+] Carregando mais vagas...")
             time.sleep(3)
-        except NoSuchElementException:
-            print("[+] Todas as vagas foram carregadas.")
+        except (NoSuchElementException, TimeoutException, ElementClickInterceptedException):
+            print("[+] Todas as vagas foram carregadas ou botão inacessível.")
             break
 
     base_url = "https://www.vagas.com.br"
@@ -62,13 +80,13 @@ def carregar_vagas_vagas():
             link = base_url + link
 
         cursor.execute("INSERT OR IGNORE INTO vagas (titulo, link, empresa) VALUES (?, ?, ?)", (titulo, link, empresa))
-        print(f"[+] {titulo, empresa} - {link} ({empresa})")
+        print(f"[+] {titulo} - {link} ({empresa})")
         total_vagas += 1
 
     total_vagas_encontradas += total_vagas
     print(f"[+] Total de vagas coletadas do Grupo Fleury: {total_vagas}")
 
-def carregar_vagas_natura(): 
+def carregar_vagas_natura():
     global total_vagas_encontradas
     empresa = "Natura"
     print("[+] Acessando NaturaCarreiras...")
@@ -88,13 +106,13 @@ def carregar_vagas_natura():
             link = vaga.get_attribute("href")
 
             cursor.execute("INSERT OR IGNORE INTO vagas (titulo, link, empresa) VALUES (?, ?, ?)", (titulo, link, empresa))
-            print(f"[+] {titulo, empresa} - {link} ({empresa})")
+            print(f"[+] {titulo} - {link} ({empresa})")
             total_vagas += 1
 
         try:
             pagina_atual += 1
             botao_proxima = driver.find_element(By.XPATH, f"//button[@aria-label='page {pagina_atual}']")
-
+            
             if "disabled" in botao_proxima.get_attribute("class"):
                 print("[+] Última página alcançada. Encerrando...")
                 break
@@ -119,32 +137,48 @@ def carregar_vagas_raizen():
     total_vagas = 0
 
     while True:
-        print("Acessando Raízen na Gupy")
-        vagas_raizen = driver.find_elements(By.XPATH, "//a[@data-testid='job-list__listitem-href']")
-        
+        print("[+] Acessando Raízen na Gupy...")
+
+        try:
+            # Espera garantir que os elementos estejam na página antes de capturar
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//a[@data-testid='job-list__listitem-href']"))
+            )
+            vagas_raizen = driver.find_elements(By.XPATH, "//a[@data-testid='job-list__listitem-href']")
+        except TimeoutException:
+            print("[+] Nenhuma vaga encontrada ou carregamento demorou muito.")
+            break
+
         for vaga in vagas_raizen:
-            titulo = vaga.get_attribute("aria-label").strip()
-            link = vaga.get_attribute("href")
-            
-            cursor.execute("INSERT OR IGNORE INTO vagas (titulo, link, empresa) VALUES (?, ?, ?)", (titulo, link, empresa))
-            print(f"[+] {titulo, empresa} - {link} ({empresa})")
-            total_vagas += 1
+            try:
+                titulo = vaga.get_attribute("aria-label").strip()
+                link = vaga.get_attribute("href")
+
+                cursor.execute("INSERT OR IGNORE INTO vagas (titulo, link, empresa) VALUES (?, ?, ?)", (titulo, link, empresa))
+                print(f"[+] {titulo} - {link} ({empresa})")
+                total_vagas += 1
+            except StaleElementReferenceException:
+                print("[!] Elemento ficou obsoleto antes de ser acessado. Pulando...")
+                continue  # Ignora e segue para a próxima vaga
 
         conn.commit()
-        
+
         try:
-            botao_proximo = driver.find_element(By.XPATH, "//button[@data-testid='pagination-next-button']")
-            
+            # Garante que o botão "próxima página" está disponível antes de tentar clicar
+            botao_proximo = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//button[@data-testid='pagination-next-button']"))
+            )
+
             if botao_proximo.get_attribute("aria-disabled") == "true":
                 print("[+] Última página alcançada. Encerrando...")
                 break
 
             driver.execute_script("arguments[0].click();", botao_proximo)
             print("[+] Avançando para a próxima página...")
-            time.sleep(5)
+            time.sleep(3)
 
-        except NoSuchElementException:
-            print("[+] Botão de próxima página não encontrado. Encerrando...")
+        except (TimeoutException, StaleElementReferenceException):
+            print("[+] Botão de próxima página não encontrado ou inválido. Encerrando...")
             break
 
     total_vagas_encontradas += total_vagas
@@ -178,11 +212,10 @@ def Countdown(t):
     while t:
         mins, secs = divmod(t, 60)
         timer = '{:02d}:{:02d}'.format(mins, secs)
-        print(timer, end='\r')
+        print(f"\r[+] Próxima verificação em {timer}", end="", flush=True)
         time.sleep(1)
         t -= 1
-    print("Time's ready")
-
+    print("\n")
 
 # Executar as funções de scraping
 carregar_vagas_vagas()
@@ -190,22 +223,19 @@ carregar_vagas_natura()
 carregar_vagas_raizen()
 carregar_vagas_cosan()
 
-# Exibir o total de vagas encontradas
 print(f"[+] Total de vagas encontradas: {total_vagas_encontradas}")
 
-Countdown(360)
+Countdown(600)
 
 while True:
     print("\n[+] Iniciando nova verificação...")
-    
+
     carregar_vagas_vagas()
     carregar_vagas_natura()
     carregar_vagas_raizen()
-    carregar_vagas_cosan()
 
     print("[+] Verificação concluída. Aguardando próxima execução...\n")
-    time.sleep(INTERVALO_VERIFICACAO)  # Espera X segundos antes de rodar novamente
-
+    Countdown(INTERVALO_VERIFICACAO)
 
 # Salvar e fechar conexões
 conn.commit()
