@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./vaga.css";
 
 function tiraAcento(str: string): string {
-  return str.normalize("NFD").replace(/[̀-ͯ]/g, ""); // Remove acentos
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Remove acentos
 }
 
 interface Vaga {
@@ -21,18 +21,58 @@ const empresas = [
 const Vagas = () => {
   const [vagas, setVagas] = useState<Vaga[]>([]);
   const [filtro, setFiltro] = useState("");
-  const [empresaSelecionada, setEmpresaSelecionada] = useState<string | null>(null);
+  const [empresaSelecionada, setEmpresaSelecionada] = useState<string | null>(
+    null
+  );
+  const [historicoVagas, setHistoricoVagas] = useState<string[]>([]); // Guardar títulos das vagas conhecidas
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/vagas")
-      .then((response) => response.json())
-      .then((data) => setVagas(data))
-      .catch((error) => console.error("Erro ao buscar vagas:", error));
-  }, []);
+    const buscarVagas = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/vagas");
+        const data: Vaga[] = await response.json();
+
+        if (data.length > 0) {
+          const novosTitulos = data.map((vaga) => vaga.titulo);
+          const novasVagas = novosTitulos.filter(
+            (titulo) => !historicoVagas.includes(titulo)
+          );
+
+          if (novasVagas.length > 0) {
+            if (novasVagas.length === 1) {
+              new Notification("Nova vaga disponível!", {
+                body: `${novasVagas[0]} está disponível no nosso site.`,
+              });
+            } else {
+              new Notification("Novas vagas disponíveis!", {
+                body: `Novas vagas de ${novasVagas[0]} e outras estão disponíveis.`,
+              });
+            }
+
+            setHistoricoVagas(novosTitulos); // Atualiza histórico
+          }
+
+          setVagas(data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar vagas:", error);
+      }
+    };
+
+    if (Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+
+    buscarVagas();
+    const interval = setInterval(buscarVagas, 120000); // Verifica a cada 2 minutos
+    return () => clearInterval(interval);
+  }, []); // 🔥 Remove dependências desnecessárias
 
   const vagasFiltradas = vagas.filter(
     (vaga) =>
-      tiraAcento(vaga.titulo.toLowerCase()).includes(tiraAcento(filtro.toLowerCase())) &&
+      tiraAcento(vaga.titulo.toLowerCase()).includes(
+        tiraAcento(filtro.toLowerCase())
+      ) &&
       (!empresaSelecionada || vaga.empresa === empresaSelecionada)
   );
 
