@@ -70,7 +70,7 @@ def carregar_vagas_vagas():
             break
 
     base_url = "https://www.vagas.com.br"
-    vagas = driver.find_elements(By.CSS_SELECTOR, "h2.cargo a")
+    vagas = driver.find_elements(By.CSS_SELECTOR, "h2.cargo a") #seletor do local onde estão as vagas são extraíodas
 
     total_vagas = 0
     for vaga in vagas:

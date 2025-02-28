@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS vagas (
     link TEXT NOT NULL UNIQUE,
     empresa TEXT NOT NULL
 )
-""")
+""") # Criar tabela se não existir
 
 conn.commit()
 conn.close()
