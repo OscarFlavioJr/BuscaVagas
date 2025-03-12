@@ -46,7 +46,7 @@ def remover_iframes():
     """)
 
 total_vagas_encontradas = 0
-INTERVALO_VERIFICACAO = 600
+INTERVALO_VERIFICACAO = 400
 
 def carregar_vagas_vagas():
     global total_vagas_encontradas
@@ -103,7 +103,7 @@ carregar_vagas_vagas()
 
 print(f"[+] Total de vagas encontradas: {total_vagas_encontradas}")
 
-Countdown(600)
+Countdown(400)
 
 while True:
     print("\n[+] Iniciando nova verificação...")
