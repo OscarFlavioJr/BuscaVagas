@@ -46,7 +46,7 @@ def remover_iframes():
     """)
 
 total_vagas_encontradas = 0
-INTERVALO_VERIFICACAO = 60
+INTERVALO_VERIFICACAO = 300
 
 def carregar_vagas_vagas():
     global total_vagas_encontradas
@@ -79,7 +79,7 @@ def carregar_vagas_vagas():
         if link.startswith("/"):
             link = base_url + link
 
-        cursor.execute("INSERT OR REPLACE INTO vagas (titulo, link, empresa) VALUES (?, ?, ?)", (titulo, link, empresa))
+        cursor.execute("INSERT OR IGNORE INTO vagas (titulo, link, empresa) VALUES (?, ?, ?)", (titulo, link, empresa))
         print(f"[+] {titulo} - {link} ({empresa})")
         total_vagas += 1
 
@@ -105,7 +105,7 @@ carregar_vagas_vagas()
 
 print(f"[+] Total de vagas encontradas: {total_vagas_encontradas}")
 
-Countdown(60)
+Countdown(300)
 
 while True:
     print("\n[+] Iniciando nova verificação...")
