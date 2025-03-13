@@ -1,4 +1,4 @@
-import sqlite3
+import mysql.connector
 import time
 import os
 from selenium import webdriver
@@ -8,27 +8,28 @@ from selenium.common.exceptions import NoSuchElementException, ElementClickInter
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
 
-# Configuração do banco de dados SQLite
-db_path = os.path.abspath("vagas.db")
-conn = sqlite3.connect(db_path)
+
+db_config = {
+    "host": "localhost", 
+    "user": "ILMJ",
+    "password": "ILMJ2k25",
+    "database": "vagas",
+    "port" : "3306"
+}
+
+conn = mysql.connector.connect(**db_config)
 cursor = conn.cursor()
-
-# Criar tabela se não existir
+ 
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS vagas (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        titulo TEXT UNIQUE,
-        link TEXT UNIQUE,
-        empresa TEXT
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        titulo VARCHAR(255) UNIQUE,
+        link VARCHAR(500) UNIQUE,
+        empresa VARCHAR(100)
     )
 """)
 conn.commit()
-
 
 options = webdriver.ChromeOptions()
 options.add_argument("--headless")  
@@ -46,7 +47,7 @@ def remover_iframes():
     """)
 
 total_vagas_encontradas = 0
-INTERVALO_VERIFICACAO = 300
+INTERVALO_VERIFICACAO = 300  # 5 minutos
 
 def carregar_vagas_vagas():
     global total_vagas_encontradas
@@ -79,12 +80,13 @@ def carregar_vagas_vagas():
         if link.startswith("/"):
             link = base_url + link
 
-        cursor.execute("INSERT OR IGNORE INTO vagas (titulo, link, empresa) VALUES (?, ?, ?)", (titulo, link, empresa))
-        print(f"[+] {titulo} - {link} ({empresa})")
-        total_vagas += 1
-
-        conn.commit()
-
+        try:
+            cursor.execute("INSERT IGNORE INTO vagas (titulo, link, empresa) VALUES (%s, %s, %s)", (titulo, link, empresa))
+            print(f"[+] {titulo} - {link} ({empresa})")
+            total_vagas += 1
+            conn.commit()
+        except mysql.connector.Error as err:
+            print(f"Erro ao inserir no banco: {err}")
 
     total_vagas_encontradas += total_vagas
     print(f"[+] Total de vagas coletadas do Grupo Fleury: {total_vagas}")
@@ -102,7 +104,6 @@ def Countdown(t):
 
 carregar_vagas_vagas()
 
-
 print(f"[+] Total de vagas encontradas: {total_vagas_encontradas}")
 
 Countdown(300)
@@ -115,8 +116,8 @@ while True:
     print("[+] Verificação concluída. Aguardando próxima execução...\n")
     Countdown(INTERVALO_VERIFICACAO)
 
-# Salvar e fechar conexões
-conn.commit()
+# Fechar conexões
+cursor.close()
 conn.close()
 driver.quit()
 
