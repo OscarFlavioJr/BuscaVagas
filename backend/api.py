@@ -13,7 +13,7 @@ app.add_middleware(
 )
 
 DB_CONFIG = {
-  "host": "localhost", 
+  "host": "mysql", 
     "user": "ILMJ",
     "password": "ILMJ2k25",
     "database": "vagas",

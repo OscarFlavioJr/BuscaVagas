@@ -1,6 +1,5 @@
 import mysql.connector
 import time
-import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -9,27 +8,33 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
-
 db_config = {
-    "host": "localhost", 
+    "host": "mysql",  
     "user": "ILMJ",
     "password": "ILMJ2k25",
     "database": "vagas",
-    "port" : "3306"
+    "port": 3306  
 }
 
-conn = mysql.connector.connect(**db_config)
-cursor = conn.cursor()
- 
-cursor.execute("""
-    CREATE TABLE IF NOT EXISTS vagas (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        titulo VARCHAR(255) UNIQUE,
-        link VARCHAR(500) UNIQUE,
-        empresa VARCHAR(100)
-    )
-""")
-conn.commit()
+def conectar_banco():
+    return mysql.connector.connect(**db_config)
+
+def criar_tabela():
+    conn = conectar_banco()
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS vagas (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            titulo VARCHAR(255) UNIQUE,
+            link VARCHAR(500) UNIQUE,
+            empresa VARCHAR(100)
+        )
+    """)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+criar_tabela()
 
 options = webdriver.ChromeOptions()
 options.add_argument("--headless")  
@@ -46,11 +51,21 @@ def remover_iframes():
         }
     """)
 
-total_vagas_encontradas = 0
-INTERVALO_VERIFICACAO = 300  # 5 minutos
+def inserir_vaga_no_banco(titulo, link, empresa):
+    try:
+        conn = conectar_banco()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT IGNORE INTO vagas (titulo, link, empresa) VALUES (%s, %s, %s)", 
+            (titulo, link, empresa)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except mysql.connector.Error as err:
+        print(f"Erro ao inserir no banco: {err}")
 
-def carregar_vagas_vagas():
-    global total_vagas_encontradas
+def carregar_vagas():
     empresa = "Fleury"
     print("[+] Acessando Vagas.com.br...")
     url = "https://www.vagas.com.br/vagas-de-Fleury"
@@ -69,30 +84,26 @@ def carregar_vagas_vagas():
         except (NoSuchElementException, TimeoutException, ElementClickInterceptedException):
             print("[+] Todas as vagas foram carregadas ou botão inacessível.")
             break
+        except Exception as e:
+            print(f"[!] Erro inesperado ao carregar mais vagas: {e}")
+            break
 
     base_url = "https://www.vagas.com.br"
     vagas = driver.find_elements(By.CSS_SELECTOR, "h2.cargo a") 
-
     total_vagas = 0
+    
     for vaga in vagas:
         titulo = vaga.text.strip()
         link = vaga.get_attribute("href")
         if link.startswith("/"):
             link = base_url + link
+        inserir_vaga_no_banco(titulo, link, empresa)
+        print(f"[+] {titulo} - {link} ({empresa})")
+        total_vagas += 1
 
-        try:
-            cursor.execute("INSERT IGNORE INTO vagas (titulo, link, empresa) VALUES (%s, %s, %s)", (titulo, link, empresa))
-            print(f"[+] {titulo} - {link} ({empresa})")
-            total_vagas += 1
-            conn.commit()
-        except mysql.connector.Error as err:
-            print(f"Erro ao inserir no banco: {err}")
-
-    total_vagas_encontradas += total_vagas
     print(f"[+] Total de vagas coletadas do Grupo Fleury: {total_vagas}")
 
-
-def Countdown(t):
+def countdown(t):
     while t:
         mins, secs = divmod(t, 60)
         timer = '{:02d}:{:02d}'.format(mins, secs)
@@ -101,24 +112,14 @@ def Countdown(t):
         t -= 1
     print("\n")
 
+INTERVALO_VERIFICACAO = 300  # 5 minutos
 
-carregar_vagas_vagas()
-
-print(f"[+] Total de vagas encontradas: {total_vagas_encontradas}")
-
-Countdown(300)
-
-while True:
-    print("\n[+] Iniciando nova verificação...")
-
-    carregar_vagas_vagas()
-
-    print("[+] Verificação concluída. Aguardando próxima execução...\n")
-    Countdown(INTERVALO_VERIFICACAO)
-
-# Fechar conexões
-cursor.close()
-conn.close()
-driver.quit()
-
-print("[+] Scraping finalizado e dados salvos no banco de dados!")
+try:
+    while True:
+        print("\n[+] Iniciando nova verificação...")
+        carregar_vagas()
+        print("[+] Verificação concluída. Aguardando próxima execução...\n")
+        countdown(INTERVALO_VERIFICACAO)
+finally:
+    driver.quit()
+    print("[+] Scraping finalizado e dados salvos no banco de dados!")
