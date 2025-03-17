@@ -13,11 +13,11 @@ app.add_middleware(
 )
 
 DB_CONFIG = {
-  "host": "mysql", 
-    "user": "ILMJ",
+  "host": "localhost", 
+    "user": "root",
     "password": "ILMJ2k25",
     "database": "vagas",
-    "port" : "3306"
+    "port" : 3306
 }
 
 @app.get("/vagas")

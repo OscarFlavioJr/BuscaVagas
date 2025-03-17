@@ -9,8 +9,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
 db_config = {
-    "host": "mysql",  
-    "user": "ILMJ",
+    "host": "localhost",  
+    "user": "root",
     "password": "ILMJ2k25",
     "database": "vagas",
     "port": 3306  
