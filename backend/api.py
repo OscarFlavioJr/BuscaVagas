@@ -16,7 +16,7 @@ DB_CONFIG = {
   "host": "localhost", 
     "user": "root",
     "password": "ILMJ2k25",
-    "database": "vagas",
+    "database": "VAGAS",
     "port" : 3306
 }
 
