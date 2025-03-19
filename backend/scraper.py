@@ -112,7 +112,7 @@ def countdown(t):
         t -= 1
     print("\n")
 
-INTERVALO_VERIFICACAO = 45 
+INTERVALO_VERIFICACAO = 51
 
 try:
     while True:
