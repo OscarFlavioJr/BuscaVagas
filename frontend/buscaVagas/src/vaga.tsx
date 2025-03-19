@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./vaga.css";
 
 function tiraAcento(str: string): string {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Remove acentos
 }
 
 interface Vaga {
@@ -24,7 +24,7 @@ const Vagas = () => {
   const [empresaSelecionada, setEmpresaSelecionada] = useState<string | null>(
     null
   );
-  const [historicoVagas, setHistoricoVagas] = useState<string[]>([]); 
+  const [historicoVagas, setHistoricoVagas] = useState<string[]>([]);
 
   useEffect(() => {
     const buscarVagas = async () => {
@@ -64,9 +64,9 @@ const Vagas = () => {
     }
 
     buscarVagas();
-    const interval = setInterval(buscarVagas, 86400);
+    const interval = setInterval(buscarVagas, 12000);
     return () => clearInterval(interval);
-  }, []); // 🔥
+  }, []); 
 
   const vagasFiltradas = vagas.filter(
     (vaga) =>
