@@ -24,7 +24,6 @@ const buscarVagas = async () => {
         const novasVagas = novosTitulos.filter(
             titulo => !historicoVagas.includes(titulo)
         );
-
         
         if (novasVagas.length > 0) {
             if (Notification.permission === "granted") {
