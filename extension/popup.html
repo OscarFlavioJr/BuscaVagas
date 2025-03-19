@@ -3,53 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Vagas de Emprego</title>
 </head>
 <body>
 
-    <h1 class="title">Título da vaga</h1>
+    <h1 class="title">Vagas Disponíveis</h1>
+    <ul id="lista-vagas"></ul> 
+    <p id="erro-msg" style="color: red;"></p> 
 
     <script>
+        let historicoVagas = [];
+
         const buscarVagas = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8000/vagas");
+            try {
+                const response = await fetch("http://127.0.0.1:8000/vagas");
 
-        if (data.length > 0) {
-          const novosTitulos = data.map((vaga) => vaga.titulo);
-          const novasVagas = novosTitulos.filter(
-            (titulo) => !historicoVagas.includes(titulo)
-          );
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
 
-          if (novasVagas.length > 0) {
-            if (novasVagas.length === 1) {
-              new Notification("Nova vaga disponível!", {
-                body: `${novasVagas[0]} está disponível no nosso site.`,
-              });
-            } else {
-              new Notification("Novas vagas disponíveis!", {
-                body: `Novas vagas de ${novasVagas[0]} e outras estão disponíveis.`,
-              });
+                const data = await response.json();
+                console.log("Dados recebidos:", data); 
+
+                if (!Array.isArray(data)) {
+                    throw new Error("Formato inválido da resposta da API");
+                }
+
+                const listaVagas = document.getElementById("lista-vagas");
+                listaVagas.innerHTML = ""; 
+                
+                const novosTitulos = data.map(vaga => vaga.titulo);
+                const novasVagas = novosTitulos.filter(
+                    titulo => !historicoVagas.includes(titulo)
+                );
+
+                
+                if (novasVagas.length > 0) {
+                    if (Notification.permission === "granted") {
+                        if (novasVagas.length === 1) {
+                            new Notification("Nova vaga disponível!", {
+                                body: `${novasVagas[0]} está disponível no nosso site.`,
+                            });
+                        } else {
+                            new Notification("Novas vagas disponíveis!", {
+                                body: `Novas vagas de ${novasVagas[0]} e outras estão disponíveis.`,
+                            });
+                        }
+                    } else {
+                        console.warn("Permissão de notificação negada");
+                    }
+
+                    historicoVagas = novosTitulos; 
+                }
+
+                
+                data.forEach(vaga => {
+                    const li = document.createElement("li");
+                    li.textContent = vaga.titulo;
+                    listaVagas.appendChild(li);
+                });
+
+                
+                document.getElementById("erro-msg").textContent = "";
+            } catch (error) {
+                console.error("Erro ao buscar vagas:", error);
+                document.getElementById("erro-msg").textContent = "Erro ao buscar vagas.";
             }
+        };
 
-            setHistoricoVagas(novosTitulos); // Atualiza histórico
-          }
-
-          setVagas(data);
+       
+        if (Notification.permission === "default") {
+            Notification.requestPermission().then(permission => {
+                if (permission !== "granted") {
+                    console.warn("Notificações bloqueadas pelo usuário");
+                }
+            });
         }
-      } catch (error) {
-        console.error("Erro ao buscar vagas:", error);
-      }
-    };
 
-    if (Notification.permission === "default") {
-      Notification.requestPermission();
-    }
-
-    console.log(vaga.titulo)
-
-    buscarVagas();
-    const interval = setInterval(buscarVagas, 60); // Verifica a cada 2 minutos
-    return () => clearInterval(interval);
+        buscarVagas();
     </script>
+
 </body>
 </html>

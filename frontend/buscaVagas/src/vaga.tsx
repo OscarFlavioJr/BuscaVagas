@@ -64,7 +64,7 @@ const Vagas = () => {
     }
 
     buscarVagas();
-    const interval = setInterval(buscarVagas, 120000); // Verifica a cada 2 minutos
+    const interval = setInterval(buscarVagas, 12000); // Verifica a cada 2 minutos
     return () => clearInterval(interval);
   }, []); // 🔥 Remove dependências desnecessárias
 
