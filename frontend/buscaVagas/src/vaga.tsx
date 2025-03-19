@@ -24,11 +24,7 @@ const Vagas = () => {
   const [empresaSelecionada, setEmpresaSelecionada] = useState<string | null>(
     null
   );
-<<<<<<< HEAD
-  const [historicoVagas, setHistoricoVagas] = useState<string[]>([]);
-=======
   const [historicoVagas, setHistoricoVagas] = useState<string[]>([]); 
->>>>>>> 9fe644b2e97233d9fac0d8a7062056e74e5523c0
 
   useEffect(() => {
     const buscarVagas = async () => {
@@ -68,15 +64,11 @@ const Vagas = () => {
     }
 
     buscarVagas();
-<<<<<<< HEAD
-    const interval = setInterval(buscarVagas, 12000);
-    return () => clearInterval(interval);
-  }, []); 
-=======
+
     const interval = setInterval(buscarVagas, 86400);
     return () => clearInterval(interval);
   }, []); // 🔥
->>>>>>> 9fe644b2e97233d9fac0d8a7062056e74e5523c0
+
 
   const vagasFiltradas = vagas.filter(
     (vaga) =>
