@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <h1 class="title">Título da vaga</h1>
+
+    <script>
+        const buscarVagas = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/vagas");
+
+        if (data.length > 0) {
+          const novosTitulos = data.map((vaga) => vaga.titulo);
+          const novasVagas = novosTitulos.filter(
+            (titulo) => !historicoVagas.includes(titulo)
+          );
+
+          if (novasVagas.length > 0) {
+            if (novasVagas.length === 1) {
+              new Notification("Nova vaga disponível!", {
+                body: `${novasVagas[0]} está disponível no nosso site.`,
+              });
+            } else {
+              new Notification("Novas vagas disponíveis!", {
+                body: `Novas vagas de ${novasVagas[0]} e outras estão disponíveis.`,
+              });
+            }
+
+            setHistoricoVagas(novosTitulos); // Atualiza histórico
+          }
+
+          setVagas(data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar vagas:", error);
+      }
+    };
+
+    if (Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+
+    console.log(vaga.titulo)
+
+    buscarVagas();
+    const interval = setInterval(buscarVagas, 60); // Verifica a cada 2 minutos
+    return () => clearInterval(interval);
+    </script>
+</body>
+</html>
