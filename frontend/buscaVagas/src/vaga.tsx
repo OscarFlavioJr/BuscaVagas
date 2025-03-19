@@ -12,10 +12,7 @@ interface Vaga {
 }
 
 const empresas = [
-  { nome: "Fleury", cor: "#670000", logo: "./fleury.png" },
-  { nome: "Natura", cor: "#FF6E0D", logo: "./natura.png" },
-  { nome: "Raízen", cor: "#83008E", logo: "./raizen.png" },
-  { nome: "Cosan", cor: "#0095A9", logo: "./cosan.png" },
+  { nome: "Fleury", cor: "#670000", logo: "./fleury.png"}
 ];
 
 const Vagas = () => {
@@ -65,9 +62,9 @@ const Vagas = () => {
 
     buscarVagas();
 
-    const interval = setInterval(buscarVagas, 86400);
+    let interval = setInterval(buscarVagas, 86400);
     return () => clearInterval(interval);
-  }, []); // 🔥
+  }, []);
 
 
   const vagasFiltradas = vagas.filter(
