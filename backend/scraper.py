@@ -1,4 +1,5 @@
 import mysql.connector
+import os
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -7,13 +8,17 @@ from selenium.common.exceptions import NoSuchElementException, ElementClickInter
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+from dotenv import load_dotenv
+import mysql.connector
+
+load_dotenv()
 
 db_config = {
-    "host": "localhost",  
-    "user": "root",
-    "password": "ILMJ2k25",
-    "database": "VAGAS",
-    "port": 3306  
+    "host": os.getenv("DB_HOST"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "database": os.getenv("DB_NAME"),
+    "port": os.getenv("DB_PORT")
 }
 
 def conectar_banco():
