@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: vagas
+      MYSQL_USER: ILMJ
+      MYSQL_PASSWORD: ILMJ2k25
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  api:
+    build: ./backend
+    container_name: api-container
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_USER: ILMJ
+      DB_PASSWORD: ILMJ2k25
+      DB_NAME: vagas
+      DB_PORT: 3306
+    ports:
+      - "8000:8000"
+
+  scraper:
+    build: ./backend
+    container_name: scraper-container
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_USER: ILMJ
+      DB_PASSWORD: ILMJ2k25
+      DB_NAME: vagas
+      DB_PORT: 3306
+    command: ["python", "scraper.py"]
+
+volumes:
+  mysql_data:

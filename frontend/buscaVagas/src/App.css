@@ -1,0 +1,66 @@
+/* Container principal */
+.container {
+  position: relative;
+  left: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Barra de pesquisa */
+.search-bar {
+  position: relative;
+  width: 60%;
+  max-width: 500px;
+  padding: 12px;
+  margin: 20px 0;
+  border: 2px solid #f86465;
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: left;
+  outline: none;
+  transition: all 0.3s;
+}
+
+/* Efeito ao focar na barra */
+.search-bar:focus {
+  border-color: #d43c3c;
+  box-shadow: 0px 0px 8px rgba(248, 100, 101, 0.6);
+}
+
+/* Lista de vagas */
+.vagas-list {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  align-items: center;
+}
+
+/* Cartão de cada vaga */
+.vaga-card {
+  width: 90%;
+  max-width: 600px;
+  text-decoration: none;
+  padding: 15px;
+  background: #f86465;
+  color: white;
+  border-radius: 8px;
+  transition: 0.3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.vaga-card:hover {
+  background: black; /* Fica preto no hover */
+  color: white;
+}
+
+.vaga-card h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+}

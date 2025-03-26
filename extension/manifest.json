@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "VAGAS FLEURY",
+    "description": "Extensão que busca e exibe vagas do Grupo Fleury.",
+    "version": "1.0",
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "scripts": [
+        {
+            "js": ["content.js"]
+        }
+    ],
+    "permissions": ["scripting", "activeTab"]
+}
