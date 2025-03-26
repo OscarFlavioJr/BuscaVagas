@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import mysql.connector
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 app = FastAPI()
 
@@ -13,11 +14,11 @@ app.add_middleware(
 )
 
 DB_CONFIG = {
-  "host": "localhost", 
-    "user": "root",
-    "password": "ILMJ2k25",
-    "database": "VAGAS",
-    "port" : 3306
+    "host": os.getenv("DB_HOST"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "database": os.getenv("DB_NAME"),
+    "port": os.getenv("DB_PORT")
 }
 
 @app.get("/vagas")
