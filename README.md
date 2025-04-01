@@ -2,7 +2,7 @@
 <p>Este foi meu primeiro desafio como desenvolvedor profissional. Criar uma <strong>barra de pesquisa</strong> que evitasse que os usuários tivessem de sair de uma aba até a outra.</p>
 <h2>Vídeo de demonstração do código apenas backed!</h2>
 <p>Este vídeo foi feito no início do desenvolvimento! Houve adição de banco de dados</p>
-<video controls playsinline style="max-width: 100%; max-height: 100%;"><source src="https://pixeldrain.com/api/file/cmWxSYNo" type="video/mp4" /></video>
+<iframe src="https://pixeldrain.com/u/vhT3qBsP?embed" style="border: none; width: 800px; max-width: 100%; height: 600px; max-height: 100%; border-radius: 8px;" allowfullscreen></iframe>
 
 <h2>Vídeo da API funcionando num REACT</h2>
 <p>Não tá bonito porque não sou muito frontEnzo</p>
