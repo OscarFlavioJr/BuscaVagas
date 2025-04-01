@@ -2,10 +2,10 @@
 <p>Este foi meu primeiro desafio como desenvolvedor profissional. Criar uma <strong>barra de pesquisa</strong> que evitasse que os usuários tivessem de sair de uma aba até a outra.</p>
 <h2>Vídeo de demonstração do código apenas backed!</h2>
 <p>Este vídeo foi feito no início do desenvolvimento! Houve adição de banco de dados</p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/duLVhNqph4U?si=uVv7zI7g386cF0DS" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+https://www.youtube.com/watch?v=duLVhNqph4U&ab_channel=OscarFlavio
 <h2>Vídeo da API funcionando num REACT</h2>
 <p>Não tá bonito porque não sou muito frontEnzo</p>
-<video controls playsinline style="max-width: 100%; max-height: 100%;"><source src="https://pixeldrain.com/api/file/vhT3qBsP" type="video/mp4" /></video>
+https://www.youtube.com/watch?v=ISef05Z642E&ab_channel=OscarFlavio
 <h3>Solução:</h3>
 <p>A solução encontrada por mim foi realizar um webScrap para assim juntar as informações necessárias, criar uma API em Python que através da FASTAPI, disponibilizasse o banco de dados MySql com todos itens devidamente organizados. A aplicação tem Auto-reload, o que dispensa a necessidade de humanos iniciá-las.</p>
 <h3>Tecnologias utilizadas:</h3>
